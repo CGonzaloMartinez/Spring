@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+
+  database:
+    container_name: db-container
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: student-db
+    healthcheck:
+      test: pg_isready -U user -d student-db
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 80s
