@@ -33,10 +33,10 @@ public class StudentService {
     }
 
     public void addNewStudent(Student student) {
-        Optional<Student> optStudent = studentRepository.findStudentByIdOrEmail(student.getId(), student.getEmail());
+        Optional<Student> optStudent = studentRepository.findStudentByEmail(student.getEmail());
 
         if (optStudent.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A student with that id or email already exists.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A student with that email already exists.");
         }
 
         studentRepository.save(student);

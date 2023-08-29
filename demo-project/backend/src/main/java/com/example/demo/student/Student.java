@@ -4,37 +4,39 @@ import java.time.LocalDate;
 import java.time.Period;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PostLoad;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table
+@Data
+@NoArgsConstructor
 public class Student {
-    @Id @Getter private Integer id;
-    @Getter private String name;
-    @Getter  LocalDate dob;
-    @Getter private String email;
-    @Getter private String photo;
-    @Getter private String city;
-    @Transient private int age;
+    @Id 
+    @SequenceGenerator(
+        name = "student_sequence",
+        sequenceName = "student_sequence",
+        allocationSize = 1
+    )
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "student_sequence"
+    )
+    private Integer id;
+    private String name;
+    private LocalDate dob;
+    private String email;
+    private String photo;
+    private String city;
     
-    @PostLoad
-    private void calculateAge() {
-        this.age = Period.between(dob, LocalDate.now()).getYears();
-    }
-
-    public Student() {}
-
-    public Student(Integer id, String name, LocalDate dob, String email, String photo, String city) {
-        this.id = id;
-        this.name = name;
-        this.dob = dob;
-        this.email = email;
-        this.photo = photo;
-        this.city = city;
+    public int getAge() {
+        return Period.between(dob, LocalDate.now()).getYears();
     }
 
     @Override
@@ -43,11 +45,10 @@ public class Student {
                 "id=" + id +
                 "name='" + name + '\'' +
                 "dob=" + dob +
+                "age=" + getAge() + 
                 "email='" + email + '\'' +
-                "photo='" + photo + '\'' + 
                 "city='" + city  + '\'' + 
+                "photo='" + photo + '\'' + 
                 '}';
     }
-
-
 }
